@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 
 // ─── Supabase client (env vars injected at build time) ───────────────────────
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const SUPABASE_URL = "https://pqpfycnvliajvfoktwsi.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBxcGZ5Y252bGlhanZmb2t0d3NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2MzcwMDgsImV4cCI6MjA5NTIxMzAwOH0.1Xdm_-k3qHdFuwwOcZN-3VJtaZI1MVCsYhdimQZu0L4";
 
 async function supabaseInsert(table, payload) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
