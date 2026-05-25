@@ -890,12 +890,14 @@ function OrderDetail({ order, token, onBack, onUpdate }) {
               <div className="item-row-emoji">{getEmoji(item.name)}</div>
               <div className="item-row-info">
                 <div className="item-row-name">{item.name}</div>
-{item.link && (
-  <a href={item.link} target="_blank" rel="noreferrer"
+{(item.link || item.name?.startsWith("http")) && (
+  <a href={item.link || item.name} target="_blank" rel="noreferrer"
      style={{ fontSize: 10, color: "var(--gold)", wordBreak: "break-all", 
      display: "block", marginTop: 3, textDecoration: "none" }}>
     View on SHEIN ↗
   </a>
+)}
+
 )}
 
                 <div className="item-row-chips">
