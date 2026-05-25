@@ -809,9 +809,8 @@ function OrderDetail({ order, token, onBack, onUpdate }) {
     if (isPaid || updating) return;
     setUpdating(true);
     try {
-      await sbFetch(`/orders?batch_code=eq.${order.batch_code}`, {
+      await sbFetch(`/orders?id=eq.${order.id}`, {
         method: "PATCH",
-        headers: { Authorization: `Bearer ${token}` },
         body: JSON.stringify({ payment_status: "paid" }),
       });
       onUpdate({ ...order, payment_status: "paid" });
@@ -819,13 +818,13 @@ function OrderDetail({ order, token, onBack, onUpdate }) {
     finally { setUpdating(false); }
   }
 
+
   async function setStage(stage) {
     if (updating) return;
     setUpdating(true);
     try {
-      await sbFetch(`/orders?batch_code=eq.${order.batch_code}`, {
+      await sbFetch(`/orders?id=eq.${order.id}`, {
         method: "PATCH",
-        headers: { Authorization: `Bearer ${token}` },
         body: JSON.stringify({ shipping_stage: stage }),
       });
       const updated = { ...order, shipping_stage: stage };
@@ -835,6 +834,7 @@ function OrderDetail({ order, token, onBack, onUpdate }) {
     } catch (e) { alert("Update failed: " + e.message); }
     finally { setUpdating(false); }
   }
+
 
   function copyWa() {
     navigator.clipboard.writeText(waMsg).catch(() => {});
@@ -890,6 +890,14 @@ function OrderDetail({ order, token, onBack, onUpdate }) {
               <div className="item-row-emoji">{getEmoji(item.name)}</div>
               <div className="item-row-info">
                 <div className="item-row-name">{item.name}</div>
+{item.link && (
+  <a href={item.link} target="_blank" rel="noreferrer"
+     style={{ fontSize: 10, color: "var(--gold)", wordBreak: "break-all", 
+     display: "block", marginTop: 3, textDecoration: "none" }}>
+    View on SHEIN ↗
+  </a>
+)}
+
                 <div className="item-row-chips">
                   {item.size && <span className="item-chip">Size {item.size}</span>}
                   {item.color && <span className="item-chip">{item.color}</span>}
