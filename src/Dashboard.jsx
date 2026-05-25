@@ -982,12 +982,10 @@ function Dashboard({ token, user, onSignOut }) {
   const [selected, setSelected] = useState(null);
   const [filter, setFilter] = useState("All");
 
-  const fetchOrders = useCallback(async (quiet = false) => {
+ const fetchOrders = useCallback(async (quiet = false) => {
     if (quiet) setRefreshing(true); else setLoading(true);
     try {
-      const data = await sbFetch("/orders?order=created_at.desc", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const data = await sbFetch("/orders?order=created_at.desc");
       setOrders(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error(e);
@@ -995,7 +993,8 @@ function Dashboard({ token, user, onSignOut }) {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [token]);
+  }, []);
+
 
   useEffect(() => { fetchOrders(); }, [fetchOrders]);
 
