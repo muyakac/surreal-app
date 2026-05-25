@@ -20,15 +20,23 @@ async function supabaseInsert(table, payload) {
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-function generateBatchCode() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  return (
-    "SR-" +
-    Array.from({ length: 6 }, () =>
-      chars[Math.floor(Math.random() * chars.length)]
-    ).join("")
-  );
+async function generateBatchCode() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?select=batch_code&order=created_at.desc`, {
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+    },
+  });
+  const data = await res.json();
+  const codes = (Array.isArray(data) ? data : [])
+    .map(o => o.batch_code)
+    .filter(c => /^A\d+$/.test(c));
+  if (codes.length === 0) return "A101";
+  const numbers = codes.map(c => parseInt(c.slice(1)));
+  const next = Math.max(...numbers) + 1;
+  return `A${next}`;
 }
+
 
 function shippingFee(count) {
   if (count <= 0) return 0;
@@ -655,7 +663,8 @@ export default function SurrealOrderForm() {
     setError("");
     setSubmitting(true);
     try {
-      const batchCode = generateBatchCode();
+      const batchCode = await generateBatchCode();
+
       const payload = {
         customer_name: name.trim(),
         whatsapp: whatsapp.trim(),
